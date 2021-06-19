@@ -7,7 +7,8 @@ else
 	compiler="$2"
 fi
 auto="$3"
-cd "$(dirname $BASH_SOURCE)"
+startdir="$(realpath `dirname $BASH_SOURCE`)"
+cd "$startdir"
 if ! [ -d "$compiler" ]; then
 	echo "Error: PowerSlash compiler not found. Did you run sync.sh?"
 	exit 1
@@ -26,8 +27,23 @@ fi
 ln -s ../include include
 chmod +x compile.sh
 if [[ "$1" == '' ]]; then
-	name=main
-	ext=pwsl
+	if (( $(find . -maxdepth 1 -name "*.pwsl*" | wc -l) > 0 )); then
+		exit
+	fi
+	# Clean output directory
+	cd "$startdir"
+	rm -rf out/*
+	chmod +x build.sh
+	# Build
+	cp ./src/* ./
+	files=( $(find . -maxdepth 1 -name "*.pwsl*") )
+	i=0
+	while ((i < ${#files[@]})); do
+		./build.sh `basename ${files[i]}`
+		i=$((i+1))
+	done
+	rm *.pwsl*
+	exit
 else
 	n="$1"
 	name1=""
@@ -59,4 +75,7 @@ sv=$?
 if (( $sv != 0 )); then
 	exit $sv
 fi
-mv ./output/${name}.smc ../image
+if ! [ -s "../out" ]; then
+	mkdir ../out
+fi
+mv ./output/${name}* "../out/$name"
