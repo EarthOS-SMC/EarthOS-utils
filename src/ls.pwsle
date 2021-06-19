@@ -1,0 +1,49 @@
+// EarthOS-utils: ls
+//
+//    Copyright (C) 2021  adazem009
+//
+//    A minimal ls command to show files in the current working directory.
+//    Also supports custom paths:
+//    ls [path]
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// TODO: Add options support (like -a and -l)
+// Get args
+getitem/"arg_1",1/"argv"
+bintolist/argv/"args"
+getitem/"args",1/"path"
+// Check directory
+ftest/path,"r","d"/"test"
+set/"ret",%returnc
+if/[ret != ""]
+	print/"ls: ",path,": ",ret,\n
+	exit
+endif
+// Read directory
+ls/path/"list"
+// Print file/dir names
+getlistlength/"list"/"len"
+set/"i2",0/"i",0
+while/[i < len]
+	calc/"i=i+1"
+	calc/"i2=i2+1"
+	if/[i2 > 5]
+		print/\n
+		set/"i2",0
+	endif
+	getitem/"list",i/"it"
+	print/it," "
+endloop
+print/\n
