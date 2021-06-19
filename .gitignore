@@ -1,5 +1,6 @@
 # Build and Release Folders
 compiler/
+out/
 
 # Other files and folders
 
