@@ -21,7 +21,7 @@ getlistlength/"arg_1"/"argc"
 getitem/"arg_1",1/"input"
 set/"fileError","ENOENT"
 if/[argc == 1]
-	print/"Usage:",\n,"    cat <filename> [other files]",\n
+	print/"Usage:",\n," cat <filename> [other files]",\n
 	exit
 endif
 ftest/input,"r","f"/"test"
