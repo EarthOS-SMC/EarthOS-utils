@@ -17,7 +17,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-
 getlistlength/"arg_1"/"argc"
 getitem/"arg_1",1/"input"
 set/"fileError","ENOENT"
@@ -37,7 +36,6 @@ if/[ret != ""]
 		exit
 	endif
 endif
-
 getfile/input/"file"
 getlistlength/"file"/"len"
 set/"i",0
