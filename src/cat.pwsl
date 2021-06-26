@@ -22,7 +22,7 @@ getitem/"arg_1",1/"argv"
 bintolist/argv/"args"
 getlistlength/"args"/"argc"
 getitem/"args",1/"input"
-set/"fileError","ENOENT"
+//set/"fileError","ENOENT"
 if/[argc != 1]
 	//print/"Usage:",\n," cat <filename> [other files]",\n
 	print/"Usage:",\n," cat <filename>",\n
@@ -31,11 +31,9 @@ endif
 ftest/input,"r","f"/"test"
 set/"ret",%returnc
 if/[ret != ""]
-	if/[ret == fileError]
-		print/input,": No such file or directory",\n
-	else
-		print/input,": ",ret,\n
-	endif
+	//if/[ret == fileError]
+	//	print/input,": No such file or directory",\n
+	print/input,": ",ret,\n
 	exit
 endif
 getfile/input/"file"
