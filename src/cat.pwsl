@@ -1,6 +1,7 @@
 // EarthOS-utils: cat
 //
 //    Copyright (C) 2021  MESYETI
+//    Copyright (C) 2021  adazem009
 //
 //    Cat prints out the contents of a file
 //
@@ -17,11 +18,14 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-getlistlength/"arg_1"/"argc"
-getitem/"arg_1",1/"input"
+getitem/"arg_1",1/"argv"
+bintolist/argv/"args"
+getlistlength/"args"/"argc"
+getitem/"args",1/"input"
 set/"fileError","ENOENT"
-if/[argc == 1]
-	print/"Usage:",\n," cat <filename> [other files]",\n
+if/[argc != 1]
+	//print/"Usage:",\n," cat <filename> [other files]",\n
+	print/"Usage:",\n," cat <filename>",\n
 	exit
 endif
 ftest/input,"r","f"/"test"
