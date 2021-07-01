@@ -1,0 +1,69 @@
+// EarthOS-utils: mount
+//
+//    Copyright (C) 2021  adazem009
+//
+//    Mounts a filesystem at specified mount point.
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+getitem/"arg_1",1/"argv"
+bintolist/argv/"args"
+getlistlength/"args"/"argc"
+if/[argc == 0]
+	// TODO: Display all mounted filesystems
+	print/"mount: coming soon",\n
+	exit
+endif
+if/[argc == 1]
+	// TODO: Search for mount point in /etc/fstab
+	print/"mount: coming soon",\n
+	exit
+else
+	if/[argc != 2]
+		print/"mount: bad usage",\n
+		exit
+	endif
+	getitem/"args",2/"pnt"
+endif
+getitem/"args",1/"fs"
+if/[%whoami != "root"]
+	print/"mount: only root can do that",\n
+	exit
+endif
+// File must be readable
+ftest/fs,"r","f"/"test"
+set/"ret",%returnc
+if/[ret != ""]
+	print/"mount: ",fs,": ",ret,\n
+	exit
+endif
+// File must be writable before it can be mounted rw
+ftest/fs,"w","f"/"test"
+set/"ret",%returnc
+if/[ret != ""]
+	print/"mount: ",fs,": ",ret,\n
+	print/"File not writable, trying read-only",\n
+	set/"mode","ro"
+else
+	set/"mode","rw"
+endif
+// Mount point must be writable
+ftest/pnt,"w","d"/"test"
+set/"ret",%returnc
+if/[ret != ""]
+	print/"mount: ",pnt,": ",ret,\n
+	exit
+endif
+// TODO: Pass mode to mount
+mount/fs,pnt
