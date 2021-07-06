@@ -65,5 +65,4 @@ if/[ret != ""]
 	print/"mount: ",pnt,": ",ret,\n
 	exit
 endif
-// TODO: Pass mode to mount
-mount/fs,pnt
+mount/fs,pnt,mode
