@@ -28,6 +28,6 @@ getitem/"args",1/"pt"
 umount/pt
 set/"ret",%returnc
 if/[ret != ""]
-	print/"umount: ",pnt,": umount failed: ",ret,\n
+	print/"umount: ",pt,": umount failed: ",ret,\n
 	exit
 endif
