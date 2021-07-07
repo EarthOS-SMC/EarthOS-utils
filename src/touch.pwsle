@@ -26,15 +26,14 @@ if/[argc == 0]
 	exit
 endif
 getitem/"args",1/"input"
-set/"parent",input,"/.."
-ftest/parent,"w","d"/"test"
-set/"ret",%returnc
-if/[ret != ""]
-	print/"touch: can not touch '",input,"': ",ret,\n
-	exit
-endif
 ftest/input,"r","f"/"test"
 if/[%returnc == "ENOENT"]
 	setlist/"file"
 	write/input/"file","rw-rw-r--",%whoami,%whoami
+	set/"ret",%returnc
+	if/[ret != ""]
+		geterror/ret,0/"ret"
+		print/"touch: can not touch '",input,"': ",ret,\n
+		exit
+	endif
 endif

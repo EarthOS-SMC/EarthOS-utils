@@ -22,21 +22,18 @@ getitem/"arg_1",1/"argv"
 bintolist/argv/"args"
 getlistlength/"args"/"argc"
 getitem/"args",1/"input"
-//set/"fileError","ENOENT"
 if/[argc != 1]
 	//print/"Usage:",\n," cat <filename> [other files]",\n
 	print/"Usage:",\n," cat <filename>",\n
 	exit
 endif
-ftest/input,"r","f"/"test"
+getfile/input/"file"
 set/"ret",%returnc
 if/[ret != ""]
-	//if/[ret == fileError]
-	//	print/input,": No such file or directory",\n
+	geterror/ret,0/"ret"
 	print/input,": ",ret,\n
 	exit
 endif
-getfile/input/"file"
 getlistlength/"file"/"len"
 set/"i",0
 repeat/len

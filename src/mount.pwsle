@@ -45,6 +45,7 @@ endif
 ftest/fs,"r","f"/"test"
 set/"ret",%returnc
 if/[ret != ""]
+	geterror/ret,0/"ret"
 	print/"mount: ",fs,": ",ret,\n
 	exit
 endif
@@ -52,6 +53,7 @@ endif
 ftest/fs,"w","f"/"test"
 set/"ret",%returnc
 if/[ret != ""]
+	geterror/ret,0/"ret"
 	print/"mount: ",fs,": ",ret,\n
 	print/"File not writable, trying read-only",\n
 	set/"mode","ro"
@@ -66,3 +68,8 @@ if/[ret != ""]
 	exit
 endif
 mount/fs,pnt,mode
+set/"ret",%returnc
+if/[ret != ""]
+	geterror/ret,0/"ret"
+	print/"mount: mount failed: ",ret,\n
+endif

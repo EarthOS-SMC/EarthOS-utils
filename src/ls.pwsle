@@ -24,15 +24,14 @@
 getitem/"arg_1",1/"argv"
 bintolist/argv/"args"
 getitem/"args",1/"path"
-// Check directory
-ftest/path,"r","d"/"test"
+// Read directory
+ls/path/"list"
 set/"ret",%returnc
 if/[ret != ""]
+	geterror/ret,0/"ret"
 	print/"ls: ",path,": ",ret,\n
 	exit
 endif
-// Read directory
-ls/path/"list"
 // Print file/dir names
 getlistlength/"list"/"len"
 set/"i2",0/"i",0
