@@ -45,4 +45,6 @@ while/[i < len]
 	getitem/"list",i/"it"
 	print/it," "
 endloop
-print/\n
+if/[len > 0]
+	print/\n
+endif
