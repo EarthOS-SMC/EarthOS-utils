@@ -28,6 +28,7 @@ getitem/"args",1/"pt"
 umount/pt
 set/"ret",%returnc
 if/[ret != ""]
+	geterror/ret,0/"ret"
 	print/"umount: ",pt,": umount failed: ",ret,\n
 	exit
 endif
