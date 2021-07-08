@@ -1,0 +1,38 @@
+// EarthOS-utils: mkdir
+//
+//    Copyright (C) 2021  adazem009
+//
+//    Creates a directory.
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+getitem/"arg_1",1/"argv"
+bintolist/argv/"args"
+getlistlength/"args"/"argc"
+if/[argc == 0]
+	print/"mkdir: missing operand",\n
+	exit
+endif
+// TODO: Add -p option.
+set/"i",0
+repeat/argc
+	calc/"i=i+1"
+	getitem/"args",i/"input"
+	mkdir/input/"rw-rw-r--",%whoami,%whoami
+	set/"ret",%returnc
+	if/[ret != ""]
+		geterror/ret,0/"ret"
+		print/"mkdir: cannot create directory '",input,"': ",ret,\n
+	endif
+endloop
