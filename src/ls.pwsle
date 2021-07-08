@@ -4,7 +4,7 @@
 //
 //    A minimal ls command to show files in the current working directory.
 //    Also supports custom paths:
-//    ls [path]
+//    ls [path] [another path] ...
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -23,28 +23,44 @@
 // Get args
 getitem/"arg_1",1/"argv"
 bintolist/argv/"args"
-getitem/"args",1/"path"
-// Read directory
-ls/path/"list"
-set/"ret",%returnc
-if/[ret != ""]
-	geterror/ret,0/"ret"
-	print/"ls: ",path,": ",ret,\n
-	exit
+getlistlength/"args"/"argc"
+if/[argc == 0]
+	// Add current dir
+	append/""/"args"
+	add/argc,1/"argc"
 endif
-// Print file/dir names
-getlistlength/"list"/"len"
-set/"i2",0/"i",0
-while/[i < len]
-	calc/"i=i+1"
-	calc/"i2=i2+1"
-	if/[i2 > 5]
-		print/\n
-		set/"i2",0
+set/"i3",0
+repeat/argc
+	calc/"i3=i3+1"
+	getitem/"args",i3/"path"
+	if/[argc > 1]
+		print/path,": ",\n
 	endif
-	getitem/"list",i/"it"
-	print/it," "
+	// Read directory
+	ls/path/"list"
+	set/"ret",%returnc
+	if/[ret != ""]
+		geterror/ret,0/"ret"
+		print/"ls: ",path,": ",ret,\n
+	else
+		// Print file/dir names
+		getlistlength/"list"/"len"
+		set/"i2",0/"i",0
+		while/[i < len]
+			calc/"i=i+1"
+			calc/"i2=i2+1"
+			if/[i2 > 5]
+				print/\n
+				set/"i2",0
+			endif
+			getitem/"list",i/"it"
+			print/it," "
+		endloop
+		if/[len > 0]
+			print/\n
+		endif
+		if/[argc > 1]
+			print,\n
+		endif
+	endif
 endloop
-if/[len > 0]
-	print/\n
-endif
