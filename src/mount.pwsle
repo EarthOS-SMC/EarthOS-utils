@@ -26,8 +26,64 @@ if/[argc == 0]
 	exit
 endif
 if/[argc == 1]
-	// TODO: Search for mount point in /etc/fstab
-	print/"mount: coming soon",\n
+	getitem/"args",1/"pt"
+	// TODO: Use a shared library to read fstab
+	//
+	// Read /etc/fstab
+	getfile/"/etc/fstab"/"fstab"
+	set/"ret",%returnc
+	if/[ret != ""]
+		print/"mount: /etc/fstab: ",ret,\n
+		exit
+	endif
+	// Read every line
+	getlistlength/"fstab"/"len"
+	set/"i",0
+	repeat/len
+		calc/"i=i+1"
+		getitem/"fstab",i/"line"
+		getletter/line,1/"let"
+		if/[let != "#"]
+			setlist/"parts"
+			getlength/line/"len2"
+			set/"part",""/"i2",0
+			repeat/len2
+				calc/"i2=i2+1"
+				getletter/line,i2/"let"
+				set/"sp"," "
+				if/[let == sp]
+					append/part/"parts"
+					set/"part",""
+				else
+					set/"part",part,let
+				endif
+			endloop
+			append/part/"parts"
+			// Device/filesystem
+			getitem/"parts",1/"fs"
+			// Mount point
+			getitem/"parts",2/"pnt"
+			// Mode
+			getitem/"parts",3/"md"
+			// Check input
+			if/[pt == fs]
+				set/"mnt",1
+			endif
+			if/[pt == pnt]
+				set/"mnt",1
+			endif
+			if/[mnt == 1]
+				mount/fs,pnt,md
+				set/"ret",%returnc
+				if/[ret != ""]
+					geterror/ret,0/"ret"
+					print/"mount: mount failed: ",ret,\n
+				endif
+				exit
+			endif
+		endif
+	endloop
+	print/"mount: ",pt,": can't find in /etc/fstab.",\n
 	exit
 else
 	if/[argc != 2]
