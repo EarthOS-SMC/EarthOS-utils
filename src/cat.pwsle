@@ -21,23 +21,26 @@
 getitem/"arg_1",1/"argv"
 bintolist/argv/"args"
 getlistlength/"args"/"argc"
-getitem/"args",1/"input"
-if/[argc != 1]
-	//print/"Usage:",\n," cat <filename> [other files]",\n
-	print/"Usage:",\n," cat <filename>",\n
+if/[argc == 0]
+	print/"Usage:",\n," cat <filename> [other files]",\n
 	exit
 endif
-getfile/input/"file"
-set/"ret",%returnc
-if/[ret != ""]
-	geterror/ret,0/"ret"
-	print/input,": ",ret,\n
-	exit
-endif
-getlistlength/"file"/"len"
-set/"i",0
-repeat/len
-	calc/"i=i+1"
-	getitem/"file",i/"line"
-	print/line,\n
+set/"i2",0
+repeat/argc
+	calc/"i2=i2+1"
+	getitem/"args",i2/"input"
+	getfile/input/"file"
+	set/"ret",%returnc
+	if/[ret != ""]
+		geterror/ret,0/"ret"
+		print/input,": ",ret,\n
+	else
+		getlistlength/"file"/"len"
+		set/"i",0
+		repeat/len
+			calc/"i=i+1"
+			getitem/"file",i/"line"
+			print/line,\n
+		endloop
+	endif
 endloop
