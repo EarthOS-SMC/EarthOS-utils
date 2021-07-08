@@ -60,7 +60,7 @@ repeat/argc
 			print/\n
 		endif
 		if/[argc > 1]
-			print,\n
+			print/\n
 		endif
 	endif
 endloop
