@@ -19,21 +19,45 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// TODO: Add options support (like -a and -l)
+// TODO: Add -l option
 // Get args
 getitem/"arg_1",1/"argv"
 bintolist/argv/"args"
 getlistlength/"args"/"argc"
-if/[argc == 0]
+set/"showall",0
+setlist/"paths"
+set/"i",0
+while/[i<argc]
+	calc/"i=i+1"
+	getitem/"args",i/"path"
+	getletter/path,1/"let"
+	if/[let == '-']
+		getlength/path/"len"
+		set/"i2",1
+		while/[i2 < len]
+			calc/"i2=i2+1"
+			getletter/path,i2/"let"
+			if/[let == 'a']
+				set/"showall",1
+			else
+				print/"ls: unknown option: '-",let,"'",\n
+			endif
+		endloop
+	else
+		append/path/"paths"
+	endif
+endloop
+getlistlength/"paths"/"len2"
+if/[len2 == 0]
 	// Add current dir
-	append/""/"args"
-	add/argc,1/"argc"
+	append/""/"paths"
+	add/len2,1/"len2"
 endif
 set/"i3",0
-repeat/argc
+repeat/len2
 	calc/"i3=i3+1"
-	getitem/"args",i3/"path"
-	if/[argc > 1]
+	getitem/"paths",i3/"path"
+	if/[len2 > 1]
 		print/path,": ",\n
 	endif
 	// Read directory
@@ -54,7 +78,16 @@ repeat/argc
 				set/"i2",0
 			endif
 			getitem/"list",i/"it"
-			print/it," "
+			getletter/it,1/"let"
+			set/"show",1
+			if/[let == '.']
+				if/[showall == 0]
+					set/"show",0
+				endif
+			endif
+			if/[show == 1]
+				print/it," "
+			endif
 		endloop
 		if/[len > 0]
 			print/\n
