@@ -1,0 +1,79 @@
+// EarthOS-utils: dmesg
+//
+//    Copyright (C) 2021  adazem009
+//
+//    Shows kernel log.
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// Read args
+getitem/"arg_1",1/"argv"
+bintolist/argv/"args"
+getlistlength/"args"/"argc"
+set/"watch",0/"i",0
+repeat/argc
+	calc/"i=i+1"
+	getitem/"args",i/"arg"
+	getletter/arg,1/"let"
+	if/[let == '-']
+		getlength/arg/"len"
+		set/"i2",1
+		while/[i2 < len]
+			calc/"i2=i2+1"
+			getletter/arg,i2/"let"
+			if/[let == 'w']
+				set/"watch",1
+			else
+				print/"dmesg: unknown option '",let,"'",\n
+			endif
+		endloop
+	else
+		print/"dmesg: bad usage",\n
+	endif
+endloop
+// Read kernel log
+getklog/"log"
+set/"ret",%returnc
+if/[ret != ""]
+	geterror/ret,0/"ret"
+	print/"dmesg: read kernel buffer failed: ",ret,\n
+	exit
+endif
+getlistlength/"log"/"len"
+set/"end",0/"i",0
+while/[end == 0]
+	while/[i < len]
+		calc/"i=i+1"
+		// Read string type
+		getitem/"log",i/"type"
+		if/[type == "\n"]
+			print/\n
+		else
+			calc/"i=i+1"
+			getitem/"log",i/"str"
+			print/\ctype,str
+		endif
+	endloop
+	if/[watch == 1]
+		getkey/"keys"
+		getitem/"keys",1/"key"
+		if/[key == 'q']
+			set/"end",1
+		endif
+		getklog/"log"
+		getlistlength/"log"/"len"
+	else
+		set/"end",1
+	endif
+endloop
