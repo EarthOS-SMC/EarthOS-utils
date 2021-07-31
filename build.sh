@@ -5,6 +5,6 @@ cd src
 files=( $(find *.pwsle) )
 i=0
 while((i < ${#files[@]})); do
-	pwuc "${files[i]}" -o "../out/${files[i]%.*}"
+	pwuc "${files[i]}" -o "../out/${files[i]%.*}" || exit $?
 	i=$((i+1));
 done
